@@ -5,13 +5,14 @@ const express = require("express");
 const app = express();
 
 app.use((req, res, next) => {
-  console.log("In the middleware!");
+  console.log("Hello, I'm first middleware")
   next();
 });
 
 app.use((req, res, next) => {
-  console.log("In another middleware!");
-  res.send("<h1>Hello from Express!</h1>");
+  console.log("Hello, I'm second middleware")
+  res.send('<h1>Hello World</h1>')
+
 });
 
  
