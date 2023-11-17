@@ -2,7 +2,10 @@ const fs = require("fs");
 const express = require("express");
 const EventEmitter = require("events");
 const chatEmitter = new EventEmitter();
+
+require('dotenv').config()
 const port = process.env.PORT || 1337;
+
 const app = express();
 app.get("/", respondText);
 app.get("/json", respondJson);
