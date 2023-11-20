@@ -1,0 +1,14 @@
+@font-face {
+    font-family: 'Neue';
+    src: url('./fonts/PPNeueMontreal-Book.woff');
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: 'Neue';
+}
+
+.text-center {
+    text-align: center;
+}

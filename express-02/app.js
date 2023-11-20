@@ -1,25 +1,18 @@
-const http = require("http");
-const querystring = require("querystring");
 const port = process.env.PORT || 3002;
 const fs = require("fs");
 const express = require("express");
-
+const bodyParser = require("body-parser");
 const app = express();
+const EventEmitter = require("events");
 
-// const server = http.createServer(function (req, res) {
-//   if (req.url === "/") return respondHello(req, res);
-//   if (req.url === "/json") return respondJson(req, res);
-//   if (req.url.match(/^\/echo/)) return respondEcho(req, res);
-//   if (req.url.match(/^\/static/)) return respondStatic(req, res);
-// });
-
+const chatEmitter = new EventEmitter();
 app.get("/", respondHello);
 app.get("/json", respondJson);
 app.get("/static/*", respondStatic);
+app.get("/chat", respondChat);
+app.get("/sse", respondSSE);
 
-app.listen(port);
-
-console.log("listening on port " + port);
+app.listen(port, () => console.log(`Server listening on port ${port}`));
 
 function respondHello(req, res) {
     res.end("Welcome to Rufat Aliyev's first backend");
@@ -33,15 +26,24 @@ function respondJson(req, res) {
     });
 }
 
-function respondEcho(req, res) {
-    const { text = "" } = querystring.parse(req.url.split("?")[1]);
-    console.log(text);
-    res.setHeader("Content-Type", "application/json");
-    res.json({
-        text: text,
-        uppercase: text.toUpperCase(),
-        backwards: text.split("").reverse().join(""),
-        characterCount: text.length,
+function respondChat(req, res) {
+    const { message } = req.query;
+
+    chatEmitter.emit("message", message);
+    res.end();
+}
+
+function respondSSE(req, res) {
+    res.writeHead(200, {
+        "Content-Type": "text/event-stream",
+        Connection: "keep-alive",
+    });
+
+    const onMessage = (msg) => res.write(`data: ${msg}\n\n`);
+    chatEmitter.on("message", onMessage);
+
+    res.on("close", function() {
+        chatEmitter.off("message", onMessage);
     });
 }
 
