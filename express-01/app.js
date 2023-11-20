@@ -6,6 +6,7 @@ const express = require("express");
 
 const app = express();
 
+<<<<<<< HEAD
 // const server = http.createServer(function (req, res) {
 //   if (req.url === "/") return respondHello(req, res);
 //   if (req.url === "/json") return respondJson(req, res);
@@ -56,3 +57,15 @@ function respondNotFound(req, res) {
     res.writeHead(404, { "Content-Type": "text/plain" });
     res.end("Not Found");
 }
+=======
+app.use((req, res, next) => {
+  console.log("Hello, I'm first middleware")
+  res.send('<h1>Hello From Express!</h1>')
+});
+
+
+ 
+app.listen(process.env.PORT || 3002, () => {
+    console.log(`Server listening on ${process.env.PORT || 3002}`);
+})  
+>>>>>>> d18f29633c4e9f6be255708a09e501ff68dc2d7e
